@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Support Ticket System</title>
+
+  <style>
+
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      width: 450px;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005ea6;
+    }
+
+    .success-section {
+      display: none;
+      text-align: center;
+    }
+
+    .ticket-number {
+      font-size: 32px;
+      color: green;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .message {
+      font-size: 18px;
+      margin-top: 15px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- ====================== -->
+    <!-- FORM SECTION -->
+    <!-- ====================== -->
+
+    <div id="formSection">
+
+      <h2>Create Support Ticket</h2>
+
+      <form id="ticketForm">
+
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter Name"
+          required
+        >
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          required
+        >
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          required
+        >
+
+        <textarea
+          name="description"
+          rows="5"
+          placeholder="Describe your issue"
+          required
+        ></textarea>
+
+        <button type="submit">
+          Submit Ticket
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- ====================== -->
+    <!-- SUCCESS SECTION -->
+    <!-- ====================== -->
+
+    <div
+      class="success-section"
+      id="successSection"
+    >
+
+      <h2>✅ Ticket Created Successfully</h2>
+
+      <div class="message">
+        Your Ticket Number is:
+      </div>
+
+      <div
+        class="ticket-number"
+        id="ticketNumber"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    document
+      .getElementById("ticketForm")
+      .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        const data = {
+          name: formData.get("name"),
+          email: formData.get("email"),
+          password: formData.get("password"),
+          description: formData.get("description")
+        };
+
+        const response = await fetch("/createTicket", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify(data)
+
+        });
+
+        const result = await response.json();
+
+        // hide form
+        document.getElementById("formSection").style.display = "none";
+
+        // show success section
+        document.getElementById("successSection").style.display = "block";
+
+        // display ticket number
+        document.getElementById("ticketNumber").innerText =
+          result.ticketNumber;
+
+      });
+
+  </script>
+
+</body>
+
+</html>
